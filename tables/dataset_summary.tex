@@ -1,0 +1,17 @@
+\begin{table*}[t]
+  \centering
+  \caption{Validated split sizes and Stage~2 test support (counts are flows).}
+  \label{tab:exp-splits}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lcccc p{0.42\textwidth}@{}}
+    \toprule
+    Stage & Train & Dev & Test & Group overlap & Notes \\
+    \midrule
+    Stage~1 & 4160 & 450 & 460 & 0 &
+      Benign:malicious $= 3744{:}416$ on the training draw \\
+    Stage~2 & 414 & 88 & 93 & --- &
+      Test support: C2 $=20$; data exfiltration $=14$; HTTPS tunneling $=45$; domain fronting $=14$ \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

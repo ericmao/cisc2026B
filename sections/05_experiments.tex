@@ -1,0 +1,40 @@
+\section{Experimental Validation}
+\label{sec:experiments}
+
+\subsection{Objectives}
+
+We answer three validation questions aligned with the event-signal thesis:
+\begin{itemize}\itemsep1pt
+  \item \textbf{RQ1:} Under strict group isolation, does Stage~1 retain strong OOD macro-F1 suitable for dispatch?
+  \item \textbf{RQ2:} On held-out malicious-focused data, does Stage~2 retain non-trivial macro-F1 despite class imbalance?
+  \item \textbf{RQ3:} Does replay reproduce one event signal per input flow with consistent Stage~1/Stage~2 admission?
+\end{itemize}
+Success means downstream consumers can trust serialized fields---not that the pipeline autonomously contains incidents.
+
+\subsection{Data and protocol}
+
+Evaluations fuse controlled laboratory HTTPS/TLS scenarios with public encrypted-traffic corpora (tunneling, DNS-over-HTTPS families, etc.).
+Stage~1 estimates benign vs.\ malicious propagation with train/dev/test sizes $(4160,450,460)$, class ratio $3744{:}416$ on training, and \emph{zero} split-group overlap---reducing leakage from correlated captures.
+Stage~2 trains on dispatched flows with split $(414,88,93)$; test support per behavior is $(20,14,45,14)$ for C2, data exfiltration, HTTPS tunneling, and domain-fronting-like classes respectively.
+
+All numbers below are \emph{frozen} artifact exports; we do not claim adaptive drift handling or open-set guarantees.
+
+\subsection{Results and interpretation}
+
+Table~\ref{tab:validation} aggregates headline metrics.
+Stage~1 achieves \textbf{0.9478} OOD macro-F1, supporting its role as a conservative yet informative gate: analysts receive calibrated context even when flows stay benign, while suspicious flows accumulate structured evidence.
+
+Stage~2 reaches \textbf{0.8495} accuracy and \textbf{0.7778} macro-F1 on $n=93$.
+Macro-F1 reflects imbalance; accuracy complements readability but should not be interpreted as operational utility in isolation.
+These metrics validate \emph{behavior tagging conditioned on dispatch}, not end-to-end investigative conclusions.
+
+Replay exercises the full serialization path: \textbf{460} ingested flows yield \textbf{460} signals; Stage~1 tallies \textbf{418} benign vs.\ \textbf{42} malicious calls, and all \textbf{42} malicious flows invoke Stage~2---demonstrating parity between scoring, dispatch booleans, and serialized event fields.
+Discrepancies here would break SOAR automations; their absence supports the engineering thesis of threshold-consistent events.
+
+\subsection{Limitations}
+
+We do not evaluate long-horizon temporal fusion, earliest-prefix decisions, continual learning under concept drift, or detection of entirely novel threat families.
+Nor do we study Edge-hosted large language models or automated blocking policies consuming these signals.
+Those directions require consumers and safeguards beyond the scope of this input-layer validation.
+
+\input{tables/validation_summary}

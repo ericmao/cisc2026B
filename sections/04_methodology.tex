@@ -1,0 +1,29 @@
+\section{Methodology}
+\label{sec:method}
+
+\subsection{Feature materialization}
+
+We ingest any source honoring the Layer~1 contract (Section~\ref{sec:design}): flows keyed by five-tuple and time window, augmented with TLS metadata when present and optional per-packet summaries for future temporal modules.
+Feature dictionaries are versioned; hashes over canonicalized tensors are stored in $g_i$ to detect silent skew between training and serving.
+
+\subsection{Stage~1 screening and calibration}
+
+The Stage~1 classifier outputs malicious probability $\hat{p}$; temperature scaling (or equivalent) maps logits to calibrated $\bar{p}$ on a held-out development split disjoint from OOD evaluation.
+Class imbalance is countered via reweighting or balanced sampling; the objective is reliable ranking at the operating threshold rather than leaderboard accuracy alone.
+
+\subsection{Threshold-consistent dispatch}
+
+Let $\tau$ denote the malicious admission threshold selected on development replay traces.
+A flow escalates iff $\bar{p}_{\mathrm{mal}} \ge \tau$.
+The \emph{same} inequality governs (i)~mining supervisory tuples for Stage~2 training, (ii)~online inference, and (iii)~offline archival replay.
+This alignment prevents benign label drift (e.g., exporting ``malicious'' nominal labels while dispatch logic suppresses Stage~2) and is necessary for faithful event emission.
+
+\subsection{Stage~2 behavior model}
+
+Stage~2 is trained exclusively on flows whose features were generated under the dispatch gate, mirroring conditional distributions at deployment.
+The classifier head targets the Stage~2 taxonomy in Table~\ref{tab:label_space}; macro-F1 is emphasized due to class imbalance.
+
+\subsection{Signal synthesis and replay}
+
+For each flow we populate $e_i$ (Eq.~\eqref{eq:event}) including top-$k$ logits, calibrated scores, boolean dispatch flags, schema/model version tuples, and deterministic checksums of serialized inputs.
+Replay replays stored features through the frozen cascade; Section~\ref{sec:experiments} verifies one signal per ingested flow and identical Stage~2 cardinality relative to admitted malicious traffic.

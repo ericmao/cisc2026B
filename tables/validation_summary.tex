@@ -1,0 +1,26 @@
+\begin{table*}[t]
+  \centering
+  \caption{Validated experimental snapshot (counts are flows unless noted).}
+  \label{tab:validation}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}p{0.28\textwidth} p{0.66\textwidth}@{}}
+    \toprule
+    Item & Value \\
+    \midrule
+    Stage~1 train / dev / test & 4160 / 450 / 460 \\
+    Stage~1 train benign:malicious & 3744 : 416 \\
+    Stage~1 group overlap (train--dev--test) & 0 \\
+    Stage~1 OOD macro-F1 (test) & 0.9478 \\
+    \midrule
+    Stage~2 train / dev / test & 414 / 88 / 93 \\
+    Stage~2 test accuracy / macro-F1 & 0.8495 / 0.7778 \\
+    Stage~2 test support by class$^{\dagger}$ & 20 / 14 / 45 / 14 \\
+    \midrule
+    Replay flows / emitted event signals & 460 / 460 \\
+    Replay Stage~1 benign / malicious & 418 / 42 \\
+    Replay flows entering Stage~2 & 42 \\
+    \bottomrule
+  \end{tabular}\\[-2pt]
+  {\footnotesize $^{\dagger}$C2, data exfiltration, HTTPS tunneling, domain-fronting-like.}
+\end{table*}

@@ -1,0 +1,94 @@
+\section{System Design}
+\label{sec:design}
+
+\subsection{Goals and Problem Statement}
+
+Edge-native defenses must (i)~operate without payload visibility, (ii)~emit machine-readable evidence richer than a scalar label, and (iii)~allow telemetry ingress and model backbones to evolve without breaking downstream automation.
+We pose:
+\begin{quote}\small
+\emph{Given an encrypted flow observed at the edge, how can a two-stage inference cascade convert it into a threshold-consistent and semantically meaningful security event signal?}
+\end{quote}
+
+\textbf{Non-goals.}
+We do \emph{not} claim full episode reconstruction, global trust calibration, automated containment, or conversational triage; those modules consume---but lie outside---the validated artifact.
+
+\subsection{Pipeline Overview}
+
+Figure~\ref{fig:system_overview} situates four layers.
+\textbf{Layer~0} aggregates heterogeneous observations: programmable telemetry, gateways, SPAN/mirror ports, curated public captures, and controlled HTTPS/TLS threat scenarios.
+\textbf{Layer~1} builds flow records: five-tuple, timing, optional TLS metadata, sequences of lengths/directions/inter-arrival times (for future temporal models), and lineage fields (collection run, dataset id).
+\textbf{Layer~2} runs Stage~1 screening and Stage~2 behavior classification under a shared dispatch policy (Section~\ref{sec:method}).
+\textbf{Layer~3} materializes the event tuple with checksums, schema/model versions, and consumer hooks.
+
+\begin{figure*}[t]
+  \centering
+  \IfFileExists{figures/system_overview.pdf}{%
+    \includegraphics[width=0.96\textwidth]{system_overview}%
+  }{%
+    \fbox{%
+      \begin{minipage}{0.94\textwidth}\footnotesize\centering
+        \textbf{L0} edge sources (telemetry, gateways, mirrors, public + synthetic TLS data)\\[1mm]
+        $\Downarrow$\quad \textbf{L1} flow assembly + provenance\\[1mm]
+        $\Downarrow$\quad \textbf{L2} Stage~1 screening $\rightarrow$ threshold dispatch $\rightarrow$ Stage~2 behavior labels\\[1mm]
+        $\Downarrow$\quad \textbf{L3} normalized security event signal (IDs, context, scores, semantics, governance)
+      \end{minipage}}%
+  }
+  \caption{Edge-native pipeline from encrypted observations to structured event signals (artwork may be replaced).}
+  \label{fig:system_overview}
+\end{figure*}
+
+\subsection{Threat-behavior label space}
+
+Table~\ref{tab:label_space} lists the validated taxonomy.
+Stage~1 isolates malicious candidates; Stage~2 attaches analyst-facing behavior semantics closer to SOC vocabulary than raw application IDs.
+
+\begin{table}[t]
+  \centering
+  \caption{Two-stage label contract (validated scope).}
+  \label{tab:label_space}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}lp{0.38\linewidth}@{}}
+    \toprule
+    Stage / label & Role \\
+    \midrule
+    Stage~1 benign / malicious & Screening + dispatch gate \\
+    Stage~2 C2 & Suspicious control channel semantics \\
+    Stage~2 data exfiltration & Abnormal outbound movement semantics \\
+    Stage~2 HTTPS tunneling & Covert channel over web TLS \\
+    Stage~2 domain-fronting-like & Destination-obfuscation semantics \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Event signal schema}
+
+Equation~\eqref{eq:event} summarizes the informational bundles embedded in each record; Table~\ref{tab:event_schema} enumerates representative keys consumed by downstream SIEM/SOAR adapters.
+\begin{equation}
+  e_i = \{m_i, n_i, x_i, c_i, a_i, g_i\}.
+  \label{eq:event}
+\end{equation}
+$m_i$ covers identifiers and timestamps; $n_i$ network context; $x_i$ optional feature sequences reserved for temporal extensions; $c_i$ calibrated Stage~1/Stage~2 outputs; $a_i$ tactic/technique hooks; $g_i$ dataset + schema/model hashes.
+
+\begin{table*}[t]
+  \centering
+  \caption{Representative security event signal field groups.}
+  \label{tab:event_schema}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X@{}}
+    \toprule
+    Group & Examples (non-exhaustive) \\
+    \midrule
+    Identity / time & \texttt{event\_id}, \texttt{flow\_id}, \texttt{session\_id}, \texttt{event\_time}, \texttt{run\_id} \\
+    Network context & \texttt{src\_ip}, \texttt{dst\_ip}, ports, \texttt{protocol}, logical zones \\
+    Sequences (optional) & \texttt{packet\_len\_seq}, \texttt{direction\_seq}, \texttt{iat\_seq} \\
+    Inference & \texttt{stage1\_label}, \texttt{stage1\_score}, \texttt{stage2\_label}, \texttt{stage2\_score}, \texttt{dispatch\_reason} \\
+    Threat semantics & \texttt{threat\_behavior}, \texttt{tactic}, \texttt{technique}, \texttt{stix\_mapping} \\
+    Governance & \texttt{schema\_version}, \texttt{model\_version}, \texttt{dataset\_source}, content checksum \\
+    Downstream hooks & \texttt{consumer\_hint}, \texttt{replay\_id}, ticket or playbook placeholders \\
+    \bottomrule
+  \end{tabularx}
+\end{table*}
+
+Designated fields ensure replay can assert bit-identical serialization when inputs and configuration versions match---a requirement for regression testing gateways and analytics rules.

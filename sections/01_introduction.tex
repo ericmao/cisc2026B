@@ -1,0 +1,31 @@
+\section{Introduction}
+\label{sec:intro}
+
+Enterprise, cloud, and industrial edges now carry predominantly encrypted sessions.
+Where bulk decryption is infeasible or policy-disallowed, defenders observe TLS handshakes, record sizes, inter-arrival times, and coarse metadata---signals that are legally and technically accessible but weakly aligned with traditional application-layer antivirus taxonomies.
+
+\textbf{Gap.}
+A rich literature improves \emph{encrypted traffic classification}, yet many published systems stop at an argmax label.
+In contrast, SOCs, incident responders, and orchestration fabrics consume \emph{events}: artifacts with stable identifiers, timestamps, observable context, calibrated confidence, tactic-relevant semantics, and lineage to models and datasets.
+Without such structure, classifiers are hard to replay after model updates, difficult to correlate across hosts, and risky to feed into automated playbooks.
+
+\textbf{Positioning.}
+We treat the learning stack as \emph{replaceable}: commodity flow export (e.g., IPFIX-style summaries~\cite{rfc7011}) and learned representations~\cite{lin2022etbert} are implementation details behind a fixed \emph{event interface}.
+Our scientific question is operational: \emph{How should encrypted flow predictions be serialized so training-time validation, online inference, and offline replay agree on dispatch and final fields?}
+
+\textbf{Approach.}
+Stage~1 performs benign/malicious screening with probability calibration and a single validated threshold policy shared across train, serve, and replay.
+Stage~2 assigns finer threat-behavior semantics only to flows that satisfy that gate, reflecting asymmetric compute budgets at the edge.
+Each flow maps to the schema in Section~\ref{sec:design}.
+
+\textbf{Snapshot.}
+Stage~1 OOD macro-F1 is $0.9478$; Stage~2 macro-F1 is $0.7778$; $460$ replayed flows produce $460$ structured signals with $42$ Stage~2 inferences, matching dispatch counters under fixed versions.
+
+\paragraph{Contributions.}
+\begin{itemize}\itemsep1pt
+  \item \textbf{Two-stage edge screening and behavior labeling} with explicitly shared calibration/threshold semantics between training and production.
+  \item \textbf{Structured event-signal schema} aligning inference outputs to downstream correlation and CTI-style fields without vendor lock-in.
+  \item \textbf{Replay validation} demonstrating per-flow signal cardinality and Stage~1/Stage~2 admission parity on archived traces.
+\end{itemize}
+
+Temporal feature fusion, open-set discovery, long-term drift adaptation, unseen-protocol guarantees, Edge-SLM copilots, and automated enforcement are \emph{explicitly out of scope} for the present validation (Section~\ref{sec:conclusion}).

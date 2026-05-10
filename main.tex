@@ -1,0 +1,89 @@
+%!TEX program=xelatex
+\documentclass[10pt, a4paper, twocolumn]{article}
+\usepackage[margin=2.5cm]{geometry}
+\setlength\columnsep{0.5cm}
+\linespread{1}
+\usepackage[]{authblk}
+
+% chinese font (CISC template): prefer bundled kaiu.ttf; fallback for machines without it
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\IfFileExists{kaiu.ttf}{%
+  \setCJKmainfont[AutoFakeBold=2,AutoFakeSlant=.4]{[kaiu.ttf]}%
+}{%
+  \setCJKmainfont{Kaiti SC}[AutoFakeBold=2,AutoFakeSlant=.4]%
+}%
+\setmainfont{Times New Roman}
+
+\usepackage{titlesec}
+
+\titleformat{\section}
+  {\fontsize{12pt}{15}\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+ {\fontsize{11pt}{15}\bfseries}{\thesubsection}{1em}{}
+  \titleformat{\subsubsection}
+ {\fontsize{11pt}{15}\bfseries}{\thesubsubsection}{1em}{}
+
+\renewcommand\thesection{\arabic{section}.}
+\renewcommand\thesubsection{\thesection\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+\usepackage[font={bf}, labelsep=space]{caption}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{indentfirst}
+
+\graphicspath{{figures/}}
+
+\renewcommand{\abstractname}{摘要}
+\renewcommand{\refname}{參考文獻}
+\renewcommand{\figurename}{圖}
+\renewcommand{\tablename}{表}
+
+% abstract (CISC template)
+\usepackage{abstract}
+\renewcommand{\abstractnamefont}{\fontsize{12pt}{15}\bfseries}
+\renewcommand{\abstracttextfont}{\fontsize{10pt}{15}}
+\setlength{\absleftindent}{0pt}
+\setlength{\absrightindent}{0pt}
+
+\date{}
+\begin{document}
+\title{\fontsize{16pt}{1}\selectfont\textbf{From Encrypted Flows to Security Event Signals: An Edge-Native Pipeline for Threat-Aware Traffic Analysis}}
+
+\author[1]{Yu-Lun Tsai}
+\author[1]{Yu-Liang Cheng}
+\author[1]{Yu-Ying Huang}
+\author[1]{Ching-Hao Mao}
+\affil[1]{Bachelor's Program in Artificial Intelligence and Information Security, Fu Jen Catholic University, New Taipei City, Taiwan}
+\affil[1]{\texttt{412580084@cloud.fju.edu.tw} (Y.-L. Tsai);\quad \texttt{412580292@cloud.fju.edu.tw} (Y.-L. Cheng);\quad \texttt{412580060@cloud.fju.edu.tw} (Y.-Y. Huang);\quad \texttt{chmao2008@gmail.com} (C.-H. Mao)}
+\renewcommand{\Affilfont}{\fontsize{12pt}{1}\bfseries}
+\renewcommand{\Authfont}{\fontsize{12pt}{1}\bfseries}
+\renewcommand\Authand{, }
+\setlength{\affilsep}{1mm}
+
+\maketitle
+\pagestyle{empty}
+\thispagestyle{empty}
+\begin{abstract}
+\input{sections/00_abstract}
+\newline
+\textbf{關鍵字:} TLS/HTTPS, encrypted traffic, security event signal, edge defense, two-stage classification, operational validation.
+\end{abstract}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_system_design}
+\input{sections/04_methodology}
+\input{sections/05_experiments}
+\input{sections/08_conclusion}
+
+\bibliography{reference}
+\bibliographystyle{abbrv}
+
+\end{document}
+
+% Format from CISC2026_format_XeLaTeX.tex; modular layout: sections/, figures/, tables/, reference.bib

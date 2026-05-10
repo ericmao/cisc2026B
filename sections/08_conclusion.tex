@@ -1,0 +1,9 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper argued that encrypted threat analysis at the edge should deliver \emph{structured, threshold-consistent security event signals}, not isolated classifier outputs.
+We presented a two-stage, vendor-neutral pipeline: calibrated Stage~1 screening, conditional Stage~2 behavior labeling, and deterministic serialization aligned with SOC-oriented schema elements.
+Validated evidence includes Stage~1 OOD macro-F1 \textbf{0.9478}, Stage~2 macro-F1 \textbf{0.7778}, and replay coverage showing \textbf{460} flows $\rightarrow$ \textbf{460} signals with \textbf{42} Stage~2 inferences---confirming dispatch-aligned event generation.
+
+The contribution is intentionally narrow: an \textbf{initial input layer} for correlation, ticketing, and future reasoning modules.
+Realizing trustworthy episode analytics, open-world robustness, temporal fusion, Edge-SLM copilots, or automated enforcement demands additional science and governance; this work supplies the normalized event substrate on which those systems can build without re-deriving per-flow semantics from raw telemetry on every iteration.

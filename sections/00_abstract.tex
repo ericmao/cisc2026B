@@ -1,0 +1,8 @@
+Widespread HTTPS/TLS limits cleartext visibility at enterprise and carrier edges, so operators must infer risk from flow-level metadata, timing, and side-channel structure rather than payloads.
+Encrypted traffic classifiers frequently report a single label or score vector, yet security operations increasingly require \emph{structured security event signals}: versioned records that bind identity, network context, calibrated model output, threat semantics, and provenance for correlation, ticketing, and later reasoning.
+
+This paper is \emph{not} a study of a specific vendor telemetry product nor a contest among neural encoders; it examines how encrypted flow-level predictions can be \emph{transformed} into threshold-consistent, schema-stable events suitable for edge-native defense stacks.
+We instantiate a two-stage pipeline: Stage~1 benign/malicious screening with calibrated dispatch, then Stage~2 threat-behavior labeling on the admitted subset, each flow emitting a normalized record spanning identity, context, scores, semantics, and governance fields.
+
+\textbf{Validated snapshot:} Stage~1 out-of-distribution (OOD) macro-F1 is $0.9478$; Stage~2 macro-F1 is $0.7778$ on the documented held-out split; replaying $460$ flows yields $460$ event signals with $42$ flows admitted to Stage~2 under the deployed threshold policy.
+We position this work as an \emph{initial validated input layer}---not a complete automated threat reasoning or response system; episode analytics, trust inference, and AI-assisted triage remain downstream consumers.

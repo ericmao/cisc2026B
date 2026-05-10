@@ -1,0 +1,16 @@
+\begin{table}[t]
+  \centering
+  \caption{Stage~2 threat-behavior classifier (validated artifact snapshot).}
+  \label{tab:exp-stage2}
+  \begin{tabular}{@{}lc@{}}
+    \toprule
+    Metric & Value \\
+    \midrule
+    Train / dev / test flows & 414 / 88 / 93 \\
+    Test support by class$^{\dagger}$ & 20 / 14 / 45 / 14 \\
+    Test accuracy & 0.8495 \\
+    Test macro-F1 & 0.7778 \\
+    \bottomrule
+  \end{tabular}\\[-2pt]
+  {\footnotesize $^{\dagger}$Order: C2, data exfiltration, HTTPS tunneling, domain-fronting-like behavior.}
+\end{table}

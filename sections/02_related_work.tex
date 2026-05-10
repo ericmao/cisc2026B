@@ -1,0 +1,20 @@
+\section{Related Work}
+\label{sec:related}
+
+\subsection{Encrypted traffic classification}
+
+Survey literature classifies encrypted flows using handcrafted statistics, deep models over bytes or bursts, and learned sequence encoders~\cite{aceto2019mobile}.
+Pre-training followed by fine-tuning improves sample efficiency and transfer across tasks~\cite{lin2022etbert,zhou2025trafficformer}.
+These works advance \emph{representation quality}; our focus is instead the \emph{operational envelope}: converting model outputs into auditable security events.
+
+\subsection{Evaluation practice and robustness}
+
+Encrypted classifiers are sensitive to dataset provenance, split protocols, and environment shifts~\cite{wickramasinghe2025sok}.
+Noisy labels and scarce malicious HTTPS traces complicate training~\cite{qing2024rapier}; robustness studies highlight performance collapse under dynamic network conditions~\cite{qing2025dynamic}.
+Our evaluation therefore reports an OOD test draw with zero cross-split group overlap for Stage~1 and complements classifier metrics with threshold-consistent replay.
+
+\subsection{Semantics, telemetry export, and security events}
+
+Flow and session records are routinely exported using standard IPFIX-style fields for analytics pipelines~\cite{rfc7011}.
+Downstream reasoning benefits when events align to shared threat semantics (MITRE ATT\&CK, STIX) for correlation~\cite{mitre2025attack,oasis2020stix}.
+We bridge these threads: encrypted-flow inference is treated as an \emph{upstream producer} of STIX-amenable records, not as a stand-alone classifier leaderboard entry.
