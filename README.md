@@ -4,7 +4,7 @@
 
 **論文標題：** *From Encrypted Flows to Security Event Signals: An Edge-Native Pipeline for Threat-Aware Traffic Analysis*
 
-**單位：** 輔仁大學人工智慧與資訊安全學士學位學程（Fu Jen Catholic University）
+**單位：** 輔仁大學人工智慧與資訊安全學士學位學程（Fu Jen Catholic University）；Ching-Hao Mao 另列 International Cybersecurity Talent Development and Promotion Association（見 `main.tex` 作者區塊）。
 
 ---
 
