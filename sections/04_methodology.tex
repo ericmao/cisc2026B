@@ -1,6 +1,8 @@
 \section{Methodology}
 \label{sec:method}
 
+This section instantiates the design of Section~\ref{sec:design}: how features are produced, how Stage~1/Stage~2 models are trained under a single dispatch policy, and how outputs are serialized and replay-checked against that policy.
+
 \subsection{Feature materialization}
 
 We ingest any source honoring the Layer~1 contract (Section~\ref{sec:design}): flows keyed by five-tuple and time window, augmented with TLS metadata when present and optional per-packet summaries for future temporal modules.

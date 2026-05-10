@@ -1,6 +1,8 @@
 \section{System Design}
 \label{sec:design}
 
+This section states the engineering contract for an edge-native pipeline: what problem we solve, how layers compose from observations to serialized events, and which labels and schema fields downstream tools may rely on.
+
 \subsection{Goals and Problem Statement}
 
 Edge-native defenses must (i)~operate without payload visibility, (ii)~emit machine-readable evidence richer than a scalar label, and (iii)~allow telemetry ingress and model backbones to evolve without breaking downstream automation.
